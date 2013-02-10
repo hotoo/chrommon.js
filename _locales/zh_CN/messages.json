@@ -1,0 +1,10 @@
+{
+  "EXTENSION_NAME": {
+    "message": "ChrommonJS 范例",
+    "description": "插件名称。"
+  },
+  "EXTENSION_DESC": {
+    "message": "用于演示 ChrommonJS 使用范例。",
+    "description": "插件描述。"
+  }
+}
