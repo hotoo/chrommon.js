@@ -13,7 +13,7 @@ var chrommon = (function(win, util){
     base_js: "js/"
   };
 
-  var DEBUG = false;
+  var DEBUG = true;
   var debugLog = function(){
     if(!DEBUG){return;}
     var msg = Array.prototype.join.call(arguments, "");
