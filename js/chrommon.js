@@ -6,13 +6,12 @@
  * @version 2013/01/03
  */
 
-var chrommon = (function(win){
+var chrommon = (function(win, util){
   var defaultOptions = {
     mode: "background",
     base_css: "css/",
     base_js: "js/"
   };
-  var request;
 
   var DEBUG = true;
   var debugLog = function(){
@@ -39,12 +38,6 @@ var chrommon = (function(win){
   var callbacks = [];       // 回调函数列表。
   var defines = [];         // 定义模块列表，主要用于内部依赖其他模块的场景。
 
-  function startsWith(str, prefix){
-    return str.indexOf(prefix)===0;
-  }
-  function endsWith(str, postfix){
-    return str.lastIndexOf(postfix)===(str.length - postfix.length);
-  }
   var dependencies = (function(){
     var _data = {};
 
@@ -66,34 +59,6 @@ var chrommon = (function(win){
     };
   })();
 
-  var request = (function(){
-    function get(uri, callback){
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", uri, true);
-      xhr.onreadystatechange = function(){
-        if(xhr.readyState == 4){
-          var text = xhr.responseText;
-          if(xhr.status == 200){
-            callback(text);
-          }else{
-            callback(text, xhr.status);
-          }
-        }
-      };
-      xhr.send();
-    }
-    return get;
-  })();
-
-  function isString(obj){
-    return "string"===typeof obj || obj instanceof String;
-  }
-  function isFunction(obj){
-    return "function"===typeof obj || obj instanceof Function;
-  }
-  function isUndefined(obj){
-    return "undefined"===typeof obj;
-  }
   /**
    * 修复模块 ID 缩略名为模块地址。
    * @param {String} id, 模块 ID。
@@ -127,7 +92,7 @@ var chrommon = (function(win){
    * @return null;
    */
   function reqire_push_queue(ids, callback){
-    if(isString(ids)){ids = [ids];}
+    if(util.isString(ids)){ids = [ids];}
     for(var i=0,id,l=ids.length; i<l; i++){
       ids[i] = id = fixUri(ids[i]);
       if(!loaded_module.hasOwnProperty(defaultOptions.mode+":"+id) &&
@@ -137,7 +102,7 @@ var chrommon = (function(win){
         _load_queue[id] = id;
       }
     }
-    if(isFunction(callback)){
+    if(util.isFunction(callback)){
       callbacks.push(function(){
         return callback.apply(null, make_context(ids));
       });
@@ -177,7 +142,7 @@ var chrommon = (function(win){
     if("contentscript"===defaultOptions.mode && !/^https?:\/\//i.test(id)){
       return _requireOnContentScript(id);
     }
-    request(id, function(text){
+    util.request(id, function(text){
       try{
         text = text.replace(/^\s*\/\/.*$/m, "");
         var json = JSON.parse(text);
@@ -206,11 +171,11 @@ var chrommon = (function(win){
       function(response){
         // 非 JavaScript 模块不使用 define 进行定义，
         // 不会被 define 进行缓存，这里直接做缓存处理。
-        if(endsWith(id, ext_js)){
+        if(util.endsWith(id, ext_js)){
           // define().
-        }else if(endsWith(id, ext_json)){
+        }else if(util.endsWith(id, ext_json)){
           loaded_module[defaultOptions.mode+":"+id] = response;
-        }else if(endsWith(id, ext_css)){
+        }else if(util.endsWith(id, ext_css)){
           loaded_module[defaultOptions.mode+":"+id] = "css: "+id;
         }else{
           loaded_module[defaultOptions.mode+":"+id] = "module: "+id;
@@ -229,7 +194,7 @@ var chrommon = (function(win){
    */
   function require(ids, callback){
     // 直接返回单个被引用的对象，提供给内部 require 使用。
-    if(isString(ids) && isUndefined(callback)){
+    if(util.isString(ids) && util.isUndefined(callback)){
       var id = fixUri(ids);
       if(loaded_module.hasOwnProperty(defaultOptions.mode+":"+id)){
         return loaded_module[defaultOptions.mode+":"+id];
@@ -262,7 +227,7 @@ var chrommon = (function(win){
       loaded_module[defaultOptions.mode+":"+id] = fac;
       return fac;
     }
-    if(isFunction(factory)){
+    if(util.isFunction(factory)){
       var re_require = /\brequire\s*\(\s*(["'])([^\1]+?)\1\s*\)/g;
       var matchs = factory.toString().match(re_require);
       if(matchs){
@@ -295,11 +260,6 @@ var chrommon = (function(win){
     }
   }
 
-  //require(["request"], function(req){
-    //request = req;
-    //alert("REQ:"+req);
-  //});
-
   win.require = require;
   win.define = define;
 
@@ -313,4 +273,35 @@ var chrommon = (function(win){
       }
     }
   };
-})(window);
+})(window, {
+  startsWith: function(str, prefix){
+    return str.indexOf(prefix)===0;
+  },
+  endsWith: function(str, postfix){
+    return str.lastIndexOf(postfix)===(str.length - postfix.length);
+  },
+  request: function(uri, callback){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", uri, true);
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState == 4){
+        var text = xhr.responseText;
+        if(xhr.status == 200){
+          callback(text);
+        }else{
+          callback(text, xhr.status);
+        }
+      }
+    };
+    xhr.send();
+  },
+  isString: function(obj){
+    return "string"===typeof obj || obj instanceof String;
+  },
+  isFunction: function(obj){
+    return "function"===typeof obj || obj instanceof Function;
+  },
+  isUndefined: function(obj){
+    return "undefined"===typeof obj;
+  }
+});
