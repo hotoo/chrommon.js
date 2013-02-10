@@ -1,0 +1,34 @@
+{
+  "name": "__MSG_EXTENSION_NAME__",
+  "description": "__MSG_EXTENSION_DESC__",
+  "version": "0.0.1",
+  "background": {
+    "scripts": ["js/chrommon.js", "js/background.js"]
+  },
+  //"options_page": "options.html",
+  "page_action": {
+    "default_icon": "img/logo.png",
+    "default_title": "__MSG_EXTENSION_NAME__"
+  },
+  "content_scripts": [{
+    "js": ["js/chrommon.js", "js/contentscript.js"],
+    "css": [],
+    "matches": ["http://*.hotoo.me/*"],
+    "run_at": "document_idle",
+    "all_frames": false
+  }],
+  "icons": {
+    "16": "img/logo.png",
+    "24": "img/logo.png",
+    "32": "img/logo.png",
+    "48": "img/logo.png",
+    "128": "img/logo.png"
+  },
+  "update_url": "http://hotoo.me/chrommons.js/updates.xml",
+  "permissions": [ "tabs", "http://*.hotoo.me/*"],
+  "web_accessible_resources": [
+  ],
+  "content_security_policy": "script-src 'self'; object-src 'self'",
+  "default_locale": "zh_CN",
+  "manifest_version": 2
+}
