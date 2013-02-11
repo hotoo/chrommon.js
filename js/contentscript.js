@@ -3,7 +3,7 @@ chrommon.config({
   mode: "contentscript"
 });
 
-require(["manifest.json", "options"], function(manifest, Options){
+require(["manifest.json", "options", "i18n"], function(manifest, Options, i18n){
 
   var win = window,
     doc = win.document,
@@ -30,7 +30,7 @@ require(["manifest.json", "options"], function(manifest, Options){
     if(request.hasOwnProperty("type")){
       switch(request.type){
         case 'open':
-          alert("Open")
+          alert(i18n.get("open"));
           break;
         default:
           break;

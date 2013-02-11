@@ -283,7 +283,9 @@ window.chrommon = (function(win, util){
       str = str.toLowerCase();
       postfix = postfix.toLowerCase();
     }
-    return str.lastIndexOf(postfix)===(str.length - postfix.length);
+    var idx = str.lastIndexOf(postfix);
+    if(idx === -1){return false;}
+    return idx===(str.length - postfix.length);
   },
   request: function(uri, callback){
     var ME = this;

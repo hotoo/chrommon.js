@@ -8,6 +8,7 @@
 
 define(function(require, exports, module){
   var re_i18n = /__MSG_(.+?)__/g;
+
   function replace(template){
     if("string"!==typeof template){return "";}
     return template.replace(re_i18n, function($0, $1_msg_name){

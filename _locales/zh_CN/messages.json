@@ -1,10 +1,15 @@
 {
-  "EXTENSION_NAME": {
+  "extension_name": {
     "message": "ChrommonJS 范例",
     "description": "插件名称。"
   },
-  "EXTENSION_DESC": {
+  "extension_desc": {
     "message": "用于演示 ChrommonJS 使用范例。",
     "description": "插件描述。"
+  },
+  // 注：本地化的键不区分大小写。
+  "open": {
+    "message": "打开插件",
+    "description": "这是对应条目的本地化描述。"
   }
 }
