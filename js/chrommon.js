@@ -1,12 +1,11 @@
 /**
  * @overview
- * @see https://github.com/salsita/chrome-skeleton
  *
  * @author 闲耘™ (hotoo.cn[AT]gmail.com)
  * @version 2013/01/03
  */
 
-var chrommon = (function(win, util){
+window.chrommon = (function(win, util){
   var defaultOptions = {
     mode: "background",
     base_css: "css/",
@@ -144,7 +143,8 @@ var chrommon = (function(win, util){
     }
     util.request(id, function(text){
       try{
-        text = text.replace(/^\s*\/\/.*$/m, "");
+        text = text.replace(/^\s*\/\/\!(.*)$/gm, "$1");
+        text = text.replace(/^\s*\/\/.*$/gm, "");
         var json = JSON.parse(text);
       }catch(ex){
         alert("Parse manifest.json Error: "+ex);
@@ -281,15 +281,19 @@ var chrommon = (function(win, util){
     return str.lastIndexOf(postfix)===(str.length - postfix.length);
   },
   request: function(uri, callback){
+    var ME = this;
     var xhr = new XMLHttpRequest();
     xhr.open("GET", uri, true);
     xhr.onreadystatechange = function(){
       if(xhr.readyState == 4){
         var text = xhr.responseText;
-        if(xhr.status == 200){
+        if(200==xhr.status){
           callback(text);
+        }else if(301==xhr.status || 302==xhr.status){
+          // Chrome Extension v2 can not user callee.
+          ME.request(xhr.getHeader("Location"), callback);
         }else{
-          callback(text, xhr.status);
+          callback(xhr, xhr.status);
         }
       }
     };

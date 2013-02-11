@@ -8,7 +8,7 @@ require(["manifest.json", "options"], function(manifest, Options){
     doc = win.document,
     loc = doc.location;
 
-  var DEBUG = loc.hash==="#debug" || false;
+  var DEBUG = loc.hash==="#debug" || manifest.debug || false;
   var DEBUG_PREFIX = "debug-";
 
   var EXTENSION_VERSION = manifest.version;
