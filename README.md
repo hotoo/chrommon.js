@@ -43,3 +43,7 @@ require(["module-1", "module-2", "module-b"],
   moduleB.methonB();
 });
 ```
+
+## See Also
+
+* [chrome-skeleton](https://github.com/salsita/chrome-skeleton)
