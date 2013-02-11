@@ -23,9 +23,6 @@ window.chrommon = (function(win, util){
     }
   };
 
-  var re_css = /\.css$/i;
-  var re_js = /\.js$/i;
-  var re_json = /\.json$/i;
   var ext_js = ".js";
   var ext_json = ".json";
   var ext_css = ".css";
@@ -64,7 +61,9 @@ window.chrommon = (function(win, util){
    * @return {String} 模块地址。
    */
   function fixUri(id){
-    if(re_js.test(id) || re_css.test(id) || re_json.test(id)){
+    if(util.endsWith(id, ext_js, "i") ||
+        util.endsWith(id, ext_css, "i") ||
+        util.endsWith(id, ext_json, "i")){
       return id;
     }else{
       return defaultOptions.base_js + id + ".js";
@@ -129,7 +128,7 @@ window.chrommon = (function(win, util){
     delete _load_queue[id];
 
     loading_module = id;
-    if(re_json.test(id)){
+    if(util.endsWith(id, ext_json, "i")){
       return _requireJSON(id);
     }else if(defaultOptions.mode === "background"){
       return _requireOnBackground(id);
@@ -171,18 +170,15 @@ window.chrommon = (function(win, util){
       function(response){
         // 非 JavaScript 模块不使用 define 进行定义，
         // 不会被 define 进行缓存，这里直接做缓存处理。
-        if(util.endsWith(id, ext_js)){
+        if(util.endsWith(id, ext_js, "i")){
           // define().
-        }else if(util.endsWith(id, ext_json)){
+        }else if(util.endsWith(id, ext_json, "i")){
           loaded_module[defaultOptions.mode+":"+id] = response;
-        }else if(util.endsWith(id, ext_css)){
+        }else if(util.endsWith(id, ext_css, "i")){
           loaded_module[defaultOptions.mode+":"+id] = "css: "+id;
         }else{
           loaded_module[defaultOptions.mode+":"+id] = "module: "+id;
         }
-        //if(!re_js.test(id)){
-          //loaded_module[defaultOptions.mode+":"+id] = "CSS: "+id;
-        //}
         return _require();
       }
     );
@@ -263,8 +259,8 @@ window.chrommon = (function(win, util){
   win.require = require;
   win.define = define;
 
-  // TODO: ChrommonJS 的公开设置接口。
   return {
+    // ChrommonJS 的公开设置接口。
     config: function(options){
       for(var k in defaultOptions){
         if(options.hasOwnProperty(k)){
@@ -277,7 +273,16 @@ window.chrommon = (function(win, util){
   startsWith: function(str, prefix){
     return str.indexOf(prefix)===0;
   },
-  endsWith: function(str, postfix){
+  /**
+   * @param {String} str, 目标字符串。
+   * @param {String} postfix, 后缀。
+   * @param {Boolean} ignoreCase, 忽略大小写。
+   */
+  endsWith: function(str, postfix, ignoreCase){
+    if(ignoreCase){
+      str = str.toLowerCase();
+      postfix = postfix.toLowerCase();
+    }
     return str.lastIndexOf(postfix)===(str.length - postfix.length);
   },
   request: function(uri, callback){
