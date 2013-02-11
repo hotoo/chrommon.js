@@ -146,7 +146,7 @@ window.chrommon = (function(win, util){
         text = text.replace(/^\s*\/\/.*$/gm, "");
         var json = JSON.parse(text);
       }catch(ex){
-        debugLog("Parse manifest.json Error: ", ex);
+        debugLog("Parse JSON Error: ", ex, "at", id);
       }
       loaded_module[defaultOptions.mode+":"+id] = json;
 
