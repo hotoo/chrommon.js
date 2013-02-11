@@ -1,15 +1,14 @@
 /**
- * @overview
+ * @overview 插件后台页代码。
  *
  * @author 闲耘™ (hotoo.cn[AT]gmail.com)
- * @version 2011/11/02
  */
 
 chrommon.config({
   mode: "background"
 });
 
-require(["manifest.json", "options"], function(manifest, Options){
+require(["manifest.json", "options", "i18n"], function(manifest, Options, i18n){
 
   chrommon.config({
     debug: manifest.debug || false
@@ -19,6 +18,7 @@ require(["manifest.json", "options"], function(manifest, Options){
   var extension_version = manifest.version;
 
   /**
+   * 【勿删】服务于 content scripts 的模块加载支持。
    * @param {Array} modules.
    * @param {Function} callback.
    * @param {Object} loaded.
@@ -75,9 +75,6 @@ require(["manifest.json", "options"], function(manifest, Options){
               sendResponse(response);
             });
             break;
-          //case 'manifest.json':
-            //sendResponse(manifest);
-            //break;
           case 'close':
             break;
           default:
