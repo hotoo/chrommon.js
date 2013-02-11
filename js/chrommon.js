@@ -79,7 +79,7 @@ window.chrommon = (function(win, util){
   function make_context(ids){
     var ctx = [];
     for(var i=0,l=ids.length; i<l; i++){
-      ctx[i] = loaded_module[defaultOptions.mode+":"+ids[i]];
+      ctx[i] = loaded_module[ids[i]];
     }
     return ctx;
   }
@@ -93,7 +93,7 @@ window.chrommon = (function(win, util){
     if(util.isString(ids)){ids = [ids];}
     for(var i=0,id,l=ids.length; i<l; i++){
       ids[i] = id = fixUri(ids[i]);
-      if(!loaded_module.hasOwnProperty(defaultOptions.mode+":"+id) &&
+      if(!loaded_module.hasOwnProperty(id) &&
           id !== loading_module &&
           !_load_queue.hasOwnProperty(id)){
         load_queue.push(id);
@@ -148,7 +148,7 @@ window.chrommon = (function(win, util){
       }catch(ex){
         debugLog("Parse JSON Error: ", ex, "at", id);
       }
-      loaded_module[defaultOptions.mode+":"+id] = json;
+      loaded_module[id] = json;
 
       return _require();
     });
@@ -173,11 +173,11 @@ window.chrommon = (function(win, util){
         if(util.endsWith(id, ext_js, "i")){
           // define().
         }else if(util.endsWith(id, ext_json, "i")){
-          loaded_module[defaultOptions.mode+":"+id] = response;
+          loaded_module[id] = response;
         }else if(util.endsWith(id, ext_css, "i")){
-          loaded_module[defaultOptions.mode+":"+id] = "css: "+id;
+          loaded_module[id] = "css: "+id;
         }else{
-          loaded_module[defaultOptions.mode+":"+id] = "module: "+id;
+          loaded_module[id] = "module: "+id;
         }
         return _require();
       }
@@ -192,8 +192,8 @@ window.chrommon = (function(win, util){
     // 直接返回单个被引用的对象，提供给内部 require 使用。
     if(util.isString(ids) && util.isUndefined(callback)){
       var id = fixUri(ids);
-      if(loaded_module.hasOwnProperty(defaultOptions.mode+":"+id)){
-        return loaded_module[defaultOptions.mode+":"+id];
+      if(loaded_module.hasOwnProperty(id)){
+        return loaded_module[id];
       }
     }
     reqire_push_queue(ids, callback);
@@ -220,7 +220,7 @@ window.chrommon = (function(win, util){
       if(!fac){
         fac = module.exports;
       }
-      loaded_module[defaultOptions.mode+":"+id] = fac;
+      loaded_module[id] = fac;
       return fac;
     }
     if(util.isFunction(factory)){
@@ -252,7 +252,7 @@ window.chrommon = (function(win, util){
       }
     }else{
       dependencies.add(id, []);
-      loaded_module[defaultOptions.mode+":"+id] = factory;
+      loaded_module[id] = factory;
     }
   }
 
