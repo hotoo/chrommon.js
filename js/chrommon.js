@@ -9,17 +9,17 @@ window.chrommon = (function(win, util){
   var defaultOptions = {
     mode: "background",
     base_css: "css/",
-    base_js: "js/"
+    base_js: "js/",
+    debug: true
   };
 
-  var DEBUG = true;
   var debugLog = function(){
-    if(!DEBUG){return;}
+    if(!defaultOptions.debug){return;}
     var msg = Array.prototype.join.call(arguments, "");
     if(defaultOptions.mode==="background"){
-      alert("debug:"+msg);
+      alert("debug: " + msg);
     }else{
-      console.log("debug:"+msg);
+      console.log("debug:", msg);
     }
   };
 
@@ -147,7 +147,7 @@ window.chrommon = (function(win, util){
         text = text.replace(/^\s*\/\/.*$/gm, "");
         var json = JSON.parse(text);
       }catch(ex){
-        alert("Parse manifest.json Error: "+ex);
+        debugLog("Parse manifest.json Error: ", ex);
       }
       loaded_module[defaultOptions.mode+":"+id] = json;
 

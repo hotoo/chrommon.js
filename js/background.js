@@ -11,6 +11,10 @@ chrommon.config({
 
 require(["manifest.json", "options"], function(manifest, Options){
 
+  chrommon.config({
+    debug: manifest.debug || false
+  });
+
   var DEBUG = manifest.debug || false;
   var extension_version = manifest.version;
 

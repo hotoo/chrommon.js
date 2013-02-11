@@ -4,12 +4,17 @@ chrommon.config({
 });
 
 require(["manifest.json", "options"], function(manifest, Options){
+
   var win = window,
     doc = win.document,
     loc = doc.location;
 
-  var DEBUG = loc.hash==="#debug" || manifest.debug || false;
+  var debug = loc.hash==="#debug" || manifest.debug || false;
   var DEBUG_PREFIX = "debug-";
+
+  chrommon.config({
+    debug: debug
+  });
 
   var EXTENSION_VERSION = manifest.version;
 
