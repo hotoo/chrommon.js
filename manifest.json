@@ -4,14 +4,14 @@
   "version": "0.0.1",
   // 感叹号前缀的注释是附带的元数据，不要删除。
   // XXX: 发布前需要修改为 `false`
-  //!"debug": true,
+  //!"debug": false,
   "background": {
     "scripts": ["js/chrommon.js", "js/background.js"]
   },
   //"options_page": "options.html",
   "page_action": {
     "default_icon": "img/logo.png",
-    "default_title": "__MSG_EXTENSION_NAME__"
+    "default_title": "__MSG_extension_name__"
   },
   "content_scripts": [{
     "js": ["js/chrommon.js", "js/contentscript.js"],
