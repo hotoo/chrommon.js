@@ -9,7 +9,7 @@ window.chrommon = (function(win, util){
   var defaultOptions = {
     mode: "background",
     base_css: "css/",
-    base_js: "js/",
+    base_js: "lib/",
     debug: true
   };
 
